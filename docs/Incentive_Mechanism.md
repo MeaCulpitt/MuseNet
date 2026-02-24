@@ -1,15 +1,28 @@
 ## Incentive & Mechanism Design
 
 ### Emission and Reward Logic
-MuseNet operates on a **ranked, multi-tier emission model** (not pure winner-takes-all) to encourage continuous high-quality human music submissions while rewarding diversity.
+MuseNet operates on a **ranked, multi-tier emission model** with a rolling **Champion Carry-Over** mechanic to reward both sustained excellence and decisive upsets.
 
-Every 24-hour validation cycle, the subnet distributes its full TAO emissions across the top 100 ranked tracks according to a decaying curve:
+Every 24-hour validation cycle, the subnet distributes its full TAO emissions as follows:
 
-- #1 track receives ~25% of emissions  
-- #2–10 receive 50% total (logarithmic decay)  
-- #11–100 receive the remaining 25%  
+- Current #1 (Champion) receives a base **20%** of the cycle's emissions  
+- An additional **5%** of the cycle's emissions accumulates in a **Champion Carry-Over Pool**  
+- The remaining **75%** is distributed across ranks #2–100 using a logarithmic decay curve (largest share to #2, tapering sharply to #100)
 
-New all-time high scores (across any challenge) trigger an immediate bonus re-allocation of 10% of the next cycle’s emissions to that miner, creating constant competitive pressure.
+**Champion Carry-Over Pool mechanics**:
+- The 5% carry-over accumulates day after day in the pool.  
+- While the same track remains #1, the champion receives only the 20% base each cycle (pool continues to grow).  
+- The moment a **new track** achieves the all-time highest consensus score (dethroning the previous #1), it immediately claims the **entire accumulated carry-over pool** on top of its 20% base for that cycle.  
+- After payout, the carry-over pool resets to zero and begins accumulating 5% again from the next cycle.
+
+**Example over multiple days** (assuming stable emissions for illustration):
+- Day 1: Track A is #1 → gets 20%, pool gets 5% (pool = 5%)  
+- Day 2: Track A still #1 → gets 20%, pool gets 5% (pool = 10%)  
+- Day 3: Track A still #1 → gets 20%, pool gets 5% (pool = 15%)  
+- Day 4: Track B becomes new #1 → Track B gets 20% + 15% carry-over (total 35% this cycle), pool resets to 0  
+- Day 5: Track B still #1 → gets 20%, pool gets 5% (pool = 5%)
+
+This structure creates reliable daily rewards for consistent top performers while building excitement and large upside for challengers who finally surpass the reigning champion.
 
 Emissions are paid to the **miner node** that submitted the track. In practice, the MuseNet web/app (fiat-only frontend) acts as a custodial miner proxy:  
 - Musicians upload via email/Google login  
@@ -70,4 +83,4 @@ It qualifies as at least **proof of effort** because every submission requires r
    Each validator outputs a 0–1 score per track. Yuma Consensus aggregates into final weights.
 
 5. **Reward Allocation**  
-   Top-ranked tracks receive emissions → converted to fiat payouts to submitter.
+   Top-ranked tracks receive emissions (including any carry-over payout) → converted to fiat payouts to submitter.
